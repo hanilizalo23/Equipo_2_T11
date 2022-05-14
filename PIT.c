@@ -6,6 +6,7 @@
  */
 
 #include "PIT.h"
+#include "GPIO.h"
 
 static void (*PIT_0_callback)(void) = 0;
 static void (*PIT_1_callback)(void) = 0;
@@ -63,7 +64,7 @@ void configureTimer(void)
 	pit_config_t pitConfig;
 	PIT_Init(PIT, &pitConfig);
 
-	PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, USEC_TO_COUNT(USEC500K, PIT_SOURCE_CLOCK));
+	PIT_SetTimerPeriod(PIT, kPIT_Chnl_0, USEC_TO_COUNT(var_freq, PIT_SOURCE_CLOCK));
 
 	PIT_EnableInterrupts(PIT, kPIT_Chnl_0, kPIT_TimerInterruptEnable);
 	EnableIRQ(PIT0_IRQn);

@@ -13,9 +13,10 @@
 #include "Bits.h"
 #include "fsl_port.h"
 
-#define USEC500K 100
-#define USEC1M 1
-#define USEC15M 0.66667
+#define F100K 500
+#define F200K 250
+#define F500K 100
+
 #define MSTOCOUNTINIT 1000
 #define ADC_MS 10
 #define PIT_SOURCE_CLOCK CLOCK_GetFreq(kCLOCK_BusClk)
