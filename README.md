@@ -1,1 +1,1 @@
-# Equipo_2_T11-
+Signal Generator implemented with DMA.
