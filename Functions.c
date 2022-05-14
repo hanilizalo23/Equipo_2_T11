@@ -73,3 +73,43 @@ void EDMA_Callback(edma_handle_t *handle, void *param, bool transferDone, uint32
         g_Transfer_Done = true;
     }
 }
+
+void configure_transm(void)
+{
+	edma_transfer_config_t transferConfig;
+	edma_config_t userConfig;
+	NVIC_enable_interrupt_and_priotity(DMA_CH0_IRQ, PRIORITY_5);
+	NVIC_global_enable_interrupts;
+    DMAMUX_Init(DMAMUX0);
+
+    DMAMUX_EnablePeriodTrigger(DMAMUX0, 0);
+    DMAMUX_SetSource(DMAMUX0, 0, 58);
+
+    DMAMUX_EnableChannel(DMAMUX0, 0);
+    EDMA_GetDefaultConfig(&userConfig);
+    EDMA_Init(DMA0, &userConfig);
+    EDMA_CreateHandle(&g_EDMA_Handle, DMA0, 0);
+    EDMA_SetCallback(&g_EDMA_Handle, EDMA_Callback, NULL);
+    EDMA_ResetChannel(g_EDMA_Handle.base, g_EDMA_Handle.channel);
+
+    EDMA_PrepareTransferConfig(&transferConfig,
+    		   &var_array[0],
+			   4,
+			   4, /* source offset */
+			   DAC0_BASE,
+			   4,
+			   0,               /* dest offset */
+			   4,             /* minor loop bytes: 8*/
+			   4095*4); /* major loop counts : 4 */
+   EDMA_TcdSetMajorOffsetConfig(
+		    		   tcdMemoryPoolPtr, //param tcd A point to the TCD structure.
+					   -4095*4, //* param sourceOffset source address offset.
+					   0);//destOffset destination address offset.
+
+   EDMA_TcdSetTransferConfig(tcdMemoryPoolPtr, &transferConfig, NULL);
+
+   EDMA_TcdEnableInterrupts(&tcdMemoryPoolPtr[0], kEDMA_MajorInterruptEnable);
+   EDMA_TcdEnableAutoStopRequest(&tcdMemoryPoolPtr[0], false);
+   EDMA_InstallTCD(DMA0, 0, &tcdMemoryPoolPtr[0]);
+   EDMA_EnableChannelRequest(DMA0, 0);
+}
