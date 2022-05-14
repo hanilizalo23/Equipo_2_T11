@@ -8,6 +8,13 @@
 #include "Functions.h"
 #include "GPIO.h"
 
+AT_QUICKACCESS_SECTION_DATA_ALIGN(edma_tcd_t tcdMemoryPoolPtr[TCD_QUEUE_SIZE + 1], sizeof(edma_tcd_t));
+
+edma_handle_t g_EDMA_Handle;
+uint8_t g_porta = FALSE;
+boolean_t g_Transfer_Done = FALSE;
+#define ARRAYS_LENGTH (200U)
+
 //Tables that contains pre-calculated values for three signals
 
 static uint16_t triangle_values[ARRAYS_LENGTH] = {
