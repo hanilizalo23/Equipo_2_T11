@@ -65,3 +65,11 @@ static uint16_t sin_values[ARRAYS_LENGTH] = {
 		892U,  946U,  1001U, 1057U, 1114U, 1172U, 1231U, 1290U, 1351U, 1412U, 1474U, 1536U, 1599U, 1662U, 1726U,
 		1790U, 1854U, 1919U, 1983U, 2048U
 };
+
+void EDMA_Callback(edma_handle_t *handle, void *param, bool transferDone, uint32_t tcds)
+{
+    if (transferDone)
+    {
+        g_Transfer_Done = true;
+    }
+}
